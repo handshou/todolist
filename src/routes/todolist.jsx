@@ -1,5 +1,15 @@
 import { useState } from "react";
-// import { Button } from "@chakra-ui/react";
+import {
+  Button,
+  ListItem,
+  List,
+  Heading,
+  Checkbox,
+  HStack,
+  Text,
+  Box,
+  Container,
+} from "@chakra-ui/react";
 
 export default function Todolist() {
   const initItems = [
@@ -13,19 +23,47 @@ export default function Todolist() {
 
   const [items, setItems] = useState(initItems);
 
-  // TODO: Add username
-  // Logout button
-
   return (
     <>
-      <h1>Todolist</h1>
-      {items.map((todo) => (
-        <div>
-          <input type="checkbox" checked={todo.isChecked} />
-          <button>View</button>
-          {todo.description}
-        </div>
-      ))}
+      <Container
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "space-between",
+          height: "85vh",
+          p: "0",
+        }}
+      >
+        <Box>
+          <Heading pb="0.5rem">Checklist</Heading>
+          <List>
+            {items.map((todo) => (
+              <HStack
+                spacing={"1rem"}
+                sx={{
+                  flex: 1,
+                  flexDir: "col",
+                  alignItems: "center",
+                  pb: "0.3rem",
+                }}
+              >
+                <Checkbox isChecked={todo.isChecked}></Checkbox>
+                <ListItem
+                  sx={{
+                    display: "flex",
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "left",
+                  }}
+                >
+                  <Button>View</Button>
+                  <Text pl={"1rem"}>{todo.description}</Text>
+                </ListItem>
+              </HStack>
+            ))}
+          </List>
+        </Box>
+      </Container>
     </>
   );
 }
