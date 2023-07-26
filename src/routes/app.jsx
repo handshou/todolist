@@ -1,13 +1,11 @@
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 export default function App() {
   return (
     <>
       <div id="App">
-        <Link to="/login">Login</Link>
-        <br />
-        <br />
-        <Link to="/todolist">Todolist</Link>
+        <Navbar />
         <Outlet />
       </div>
     </>
