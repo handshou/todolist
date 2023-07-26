@@ -6,7 +6,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import "./index.css";
 import App from "./routes/app";
 import Login from "./routes/login";
-
+import Logout from "./routes/logout";
 import Todolist from "./routes/todolist";
 
 import reportWebVitals from "./reportWebVitals";
@@ -23,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "logout",
+        element: <Logout />,
       },
     ],
   },
