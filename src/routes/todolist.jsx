@@ -6,6 +6,9 @@ export default function Todolist() {
     { isChecked: true, link: "", description: "Go to www.mysql.com" },
     { isChecked: true, link: "", description: "Download installer" },
     { isChecked: false, link: "", description: "Execute" },
+    { isChecked: false, link: "", description: "Review" },
+    { isChecked: false, link: "", description: "Todo 1" },
+    { isChecked: false, link: "", description: "Todo 2" },
   ];
 
   const [items, setItems] = useState(initItems);
