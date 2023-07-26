@@ -28,6 +28,8 @@ const router = createBrowserRouter([
   },
 ]);
 
+document.title = "Todolist"
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
