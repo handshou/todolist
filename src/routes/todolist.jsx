@@ -8,7 +8,6 @@ export default function Todolist() {
   ];
 
   const [items, setItems] = useState(initItems);
-  const [completedTaskCount, setCompletedTaskCount] = useState(0);
 
   // TODO: Add username
   // Logout button
