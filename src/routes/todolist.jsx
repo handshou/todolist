@@ -8,8 +8,15 @@ import {
   HStack,
   Text,
   Box,
+  Stack,
   Container,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { FiEdit2 } from "react-icons/fi";
+import { MdAdd } from "react-icons/md";
+import { AiTwotoneDelete } from "react-icons/ai";
+
+import TodoModal from "../components/TodoModal";
 
 export default function Todolist() {
   const initItems = [
@@ -23,6 +30,64 @@ export default function Todolist() {
 
   const [items, setItems] = useState(initItems);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleModal = () => {
+    console.log("handle modal");
+  };
+
+  const Checklist = () => (
+    <List>
+      {items.map((todo) => (
+        <HStack
+          spacing={"1rem"}
+          sx={{
+            flex: 1,
+            flexDir: "col",
+            alignItems: "center",
+            pb: "0.3rem",
+          }}
+        >
+          <Checkbox isChecked={todo.isChecked}></Checkbox>
+          <ListItem
+            sx={{
+              display: "flex",
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "left",
+            }}
+          >
+            <Button variant="outline" width="6rem">
+              Attach
+            </Button>
+            <Text pl={"1rem"}>{todo.description}</Text>
+          </ListItem>
+        </HStack>
+      ))}
+      <AddItemListButton />
+    </List>
+  );
+
+  const AddItemListButton = () => (
+    <ListItem>
+      <HStack
+        spacing={"1rem"}
+        sx={{
+          flex: 1,
+          flexDir: "col",
+          alignItems: "center",
+          pb: "0.3rem",
+        }}
+      >
+        <Checkbox isDisabled isChecked={false} />
+        <Button leftIcon={<MdAdd />} colorScheme="gray" width="100%">
+          Item
+        </Button>
+        {/* <Input width="50%" placeholder="Description" /> */}
+      </HStack>
+    </ListItem>
+  );
+
   return (
     <>
       <Container
@@ -35,33 +100,38 @@ export default function Todolist() {
         }}
       >
         <Box>
-          <Heading pb="0.5rem">Checklist</Heading>
-          <List>
-            {items.map((todo) => (
-              <HStack
-                spacing={"1rem"}
-                sx={{
-                  flex: 1,
-                  flexDir: "col",
-                  alignItems: "center",
-                  pb: "0.3rem",
-                }}
+          <Stack
+            display="flex"
+            flexDirection={{ sm: "row", base: "column" }}
+            pb="0.5rem"
+            sx={{ justifyContent: "space-between", alignItems: "left" }}
+          >
+            <Heading>Checklist</Heading>
+            <HStack>
+              <Button
+                leftIcon={<AiTwotoneDelete />}
+                colorScheme="red"
+                size="sm"
+                onClick={onOpen}
               >
-                <Checkbox isChecked={todo.isChecked}></Checkbox>
-                <ListItem
-                  sx={{
-                    display: "flex",
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "left",
-                  }}
-                >
-                  <Button>View</Button>
-                  <Text pl={"1rem"}>{todo.description}</Text>
-                </ListItem>
-              </HStack>
-            ))}
-          </List>
+                Delete selected
+              </Button>
+              <TodoModal
+                title={"Are you sure?"}
+                description={"Description"}
+                actionName={"Delete items"}
+                colorScheme="red"
+                actionIcon={<AiTwotoneDelete />}
+                callback={handleModal}
+                isOpen={isOpen}
+                onClose={onClose}
+              />
+              <Button rightIcon={<FiEdit2 />} colorScheme="blue" size="sm">
+                Edit list
+              </Button>
+            </HStack>
+          </Stack>
+          <Checklist />
         </Box>
       </Container>
     </>
