@@ -32,7 +32,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-document.title = "Todolist"
+document.title = "Todolist";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
