@@ -1,7 +1,10 @@
 import { Link as RouterLink } from "react-router-dom";
 import { Link, Container, Text } from "@chakra-ui/react";
+import { useContext } from "react";
+import { AuthContext } from "../context/MyProviders";
 
 export default function Navbar() {
+  const { auth } = useContext(AuthContext);
   return (
     <Container
       sx={{
@@ -25,7 +28,7 @@ export default function Navbar() {
       <Link as={RouterLink} to="/todolist">
         <Text>Todolist</Text>
       </Link>
-      <Text>username</Text>
+      <Text>{auth ? auth.email : "username"}</Text>
     </Container>
   );
 }

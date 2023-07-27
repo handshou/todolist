@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import "./index.css";
+import MyProviders from "./context/MyProviders";
 import App from "./routes/app";
 import Login from "./routes/login";
 import Logout from "./routes/logout";
@@ -37,9 +38,11 @@ document.title = "Todolist";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <ChakraProvider>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <MyProviders>
+      <ChakraProvider>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </MyProviders>
   </React.StrictMode>
 );
 

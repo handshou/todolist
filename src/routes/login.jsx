@@ -8,8 +8,13 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/MyProviders";
+import { useFormik } from "formik";
 
 export default function Login() {
+  const { setAuth } = useContext(AuthContext);
+
   return (
     <>
       <Heading pb="0.5rem">Login</Heading>

@@ -1,12 +1,17 @@
 import { Container, Link, Text, useDisclosure } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/MyProviders";
 
 import TodoModal from "../components/TodoModal";
 
 export default function LogoutFooter() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const { setAuth } = useContext(AuthContext);
+
   const handleModal = () => {
+    setAuth(null);
     navigate("logout");
     onClose();
   };
