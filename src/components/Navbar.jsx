@@ -1,5 +1,5 @@
-import { Link as RouterLink } from "react-router-dom";
-import { Link, Container, Text } from "@chakra-ui/react";
+import { Container, Text, Spacer } from "@chakra-ui/react";
+import { CheckIcon } from "@chakra-ui/icons";
 import { useContext } from "react";
 import { AuthContext } from "../context/MyProviders";
 
@@ -14,6 +14,7 @@ export default function Navbar() {
         justifyContent: "space-between",
         position: "fixed",
         bg: "blue.500",
+        color: "white",
         left: 0,
         right: 0,
         top: 0,
@@ -22,13 +23,12 @@ export default function Navbar() {
         borderColor: "blue.300",
       }}
     >
-      <Link as={RouterLink} to="/login">
-        <Text>Login</Text>
-      </Link>
-      <Link as={RouterLink} to="/todolist">
-        <Text>Todolist</Text>
-      </Link>
-      <Text>{auth ? auth.email : "username"}</Text>
+      <CheckIcon />
+      <Text as="b" pl="0.4rem">
+        Todolist
+      </Text>
+      <Spacer />
+      <Text>{auth ? auth.email : ""}</Text>
     </Container>
   );
 }

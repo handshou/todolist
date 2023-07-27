@@ -7,7 +7,8 @@ import "./index.css";
 import MyProviders from "./context/MyProviders";
 import App from "./routes/app";
 import Login from "./routes/login";
-import Logout from "./routes/logout";
+import Register from "./routes/register";
+import ProtectedApp from "./routes/protected";
 import Todolist from "./routes/todolist";
 
 import reportWebVitals from "./reportWebVitals";
@@ -18,16 +19,22 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "todolist",
-        element: <Todolist />,
+        path: "app",
+        element: <ProtectedApp />,
+        children: [
+          {
+            path: "/app/todolist",
+            element: <Todolist />,
+          },
+        ],
+      },
+      {
+        path: "register",
+        element: <Register />,
       },
       {
         path: "login",
         element: <Login />,
-      },
-      {
-        path: "logout",
-        element: <Logout />,
       },
     ],
   },

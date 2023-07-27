@@ -1,22 +1,21 @@
 import { Container, Link, Text, useDisclosure } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../context/MyProviders";
+import { getAuth, signOut } from "firebase/auth";
 
 import TodoModal from "../components/TodoModal";
 
 export default function LogoutFooter() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { setAuth } = useContext(AuthContext);
-
   const handleModal = () => {
-    setAuth(null);
-    navigate("logout");
+    signOut(auth).then(() => {
+      navigate("login");
+    });
     onClose();
   };
 
   const navigate = useNavigate();
+  const auth = getAuth();
 
   return (
     <Container
@@ -36,20 +35,16 @@ export default function LogoutFooter() {
         borderColor: "lightGrey",
       }}
     >
-      <Link
-        // as={RouterLink}
-        //   to="/logout"
-        onClick={onOpen}
-      >
-        <Text sx={{ mb: "0.5rem", textDecoration: "none", color: "blue" }}>
+      <Link onClick={onOpen}>
+        <Text sx={{ mb: "0.5rem", textDecoration: "none", color: "blue.600" }}>
           Logout
         </Text>
       </Link>
       <TodoModal
-        title={"Confirmation"}
-        description={"Logout?"}
+        title={"Logout"}
+        description={"Proceed with logout?"}
         actionName={"Yes"}
-        colorScheme="green"
+        colorScheme="blue"
         // actionIcon={<AiTwotoneDelete />}
         callback={handleModal}
         isOpen={isOpen}

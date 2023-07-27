@@ -33,7 +33,7 @@ export default function TodoModal({
           <ModalCloseButton />
           <ModalBody>{description}</ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="blue" variant="outline" mr={3} onClick={onClose}>
               Close
             </Button>
             <Button

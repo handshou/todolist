@@ -1,6 +1,8 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Box, Container } from "@chakra-ui/react";
 import { initializeApp } from "firebase/app";
+import { useEffect, useContext } from "react";
+import { AuthContext } from "../context/MyProviders";
 
 import Navbar from "../components/Navbar";
 import LogoutFooter from "../components/LogoutFooter";
@@ -17,6 +19,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export default function App() {
+  const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // const user = localStorage.getItem("auth");
+    // if (!auth && user) setAuth(user);
+
+    if (pathname === "/") {
+      if (!auth) navigate("login");
+    }
+
+    if (pathname === "/login" || pathname === "/register") {
+      if (auth) navigate("/app/todolist");
+    }
+  });
   return (
     <>
       <Box sx={{ w: "100vw" }}>
@@ -26,7 +44,7 @@ export default function App() {
             <Outlet />
           </Box>
         </Container>
-        <LogoutFooter />
+        {auth && <LogoutFooter />}
       </Box>
     </>
   );

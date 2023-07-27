@@ -4,9 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 import CredentialsForm from "../components/CredentialsForm";
 import { AuthContext } from "../context/MyProviders";
-import { signIn } from "../utils/auth/signIn";
+import { createUser } from "../utils/auth/createUser";
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
 
   const [isEmailError, setIsEmailError] = useState(false);
@@ -16,8 +16,10 @@ export default function Login() {
   const { setAuth } = useContext(AuthContext);
 
   const LeftStack = () => (
-    <Link to="/register">
-      <Text sx={{ textDecoration: "none", color: "blue" }}>Register</Text>
+    <Link to="/login">
+      <Text sx={{ textDecoration: "none", color: "blue" }}>
+        Already have an account?
+      </Text>
     </Link>
   );
 
@@ -25,7 +27,7 @@ export default function Login() {
     setIsEmailError(false);
     setIsPasswordError(false);
     setIsLoading(true);
-    const { errorCode, errorMessage, user } = await signIn(
+    const { errorCode, errorMessage, user } = await createUser(
       values.email,
       values.password
     );
@@ -37,10 +39,10 @@ export default function Login() {
     }
     if (errorMessage) {
       console.table({ errorCode, errorMessage });
-      if (errorCode === "auth/user-not-found") {
+      if (errorCode === "auth/email-already-in-use") {
         setIsEmailError(true);
       }
-      if (errorCode === "auth/wrong-password") {
+      if (errorCode === "auth/weak-password") {
         setIsPasswordError(true);
       }
       return;
@@ -50,7 +52,7 @@ export default function Login() {
 
   return (
     <CredentialsForm
-      title="Login"
+      title="Register"
       isEmailError={isEmailError}
       isPasswordError={isPasswordError}
       isLoading={isLoading}

@@ -119,10 +119,10 @@ export default function Todolist() {
                 Delete selected
               </Button>
               <TodoModal
-                title={"Are you sure?"}
-                description={"Description"}
+                title={"Delete items"}
+                description={""}
                 actionName={"Delete items"}
-                colorScheme="red"
+                colorScheme="blue"
                 actionIcon={<AiTwotoneDelete />}
                 callback={handleModal}
                 isOpen={isOpen}
