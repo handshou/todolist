@@ -6,9 +6,6 @@ import LogoutFooter from "../components/LogoutFooter";
 export default function App() {
   return (
     <>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </head>
       <Box sx={{ w: "100vw" }}>
         <Navbar />
         <Container>
