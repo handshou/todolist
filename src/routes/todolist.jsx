@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect } from "react";
 import {
   Button,
   ListItem,
@@ -12,6 +12,20 @@ import {
   Container,
   useDisclosure,
 } from "@chakra-ui/react";
+import {
+  query,
+  doc,
+  addDoc,
+  updateDoc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
+
+import {
+  DatabaseContext,
+  AuthContext,
+  StoreContext,
+} from "../context/MyProviders";
 import { FiEdit2 } from "react-icons/fi";
 import { MdAdd } from "react-icons/md";
 import { AiTwotoneDelete } from "react-icons/ai";
@@ -19,18 +33,49 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import TodoModal from "../components/TodoModal";
 
 export default function Todolist() {
-  const initItems = [
-    { isChecked: true, link: "", description: "Go to www.mysql.com" },
-    { isChecked: true, link: "", description: "Download installer" },
-    { isChecked: false, link: "", description: "Execute" },
-    { isChecked: false, link: "", description: "Review" },
-    { isChecked: false, link: "", description: "Todo 1" },
-    { isChecked: false, link: "", description: "Todo 2" },
-  ];
-
-  const [items, setItems] = useState(initItems);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { database } = useContext(DatabaseContext);
+  const { auth } = useContext(AuthContext);
+  const { store } = useContext(StoreContext);
+  const { setStore } = useContext(StoreContext);
+
+  useEffect(() => {
+    if (auth) {
+      const userChecklistDoc = doc(database, `checklists/${auth.uid}`);
+      const itemsCollectionRef = collection(userChecklistDoc, "items");
+      // Query Collection
+      const ChecklistItemsQuery = query(itemsCollectionRef);
+      const unsubscribeChecklistItemsQuery = onSnapshot(
+        ChecklistItemsQuery,
+        (querySnapshot) => {
+          setStore(querySnapshot.docs.map((e) => e.data()));
+        }
+      );
+      return () => {
+        unsubscribeChecklistItemsQuery();
+      };
+    }
+  }, [auth, database, setStore]);
+
+  const handleAddItem = async () => {
+    try {
+      const userChecklistDoc = await doc(database, `checklists/${auth.uid}`);
+      const itemsCollectionRef = await collection(userChecklistDoc, "items");
+      addDoc(itemsCollectionRef, {
+        id: null,
+        isChecked: true,
+        link: "",
+        description: "Download installer",
+      }).then((docRef) => {
+        updateDoc(docRef, {
+          id: docRef.id,
+        });
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
 
   const handleModal = () => {
     console.log("handle modal");
@@ -38,9 +83,9 @@ export default function Todolist() {
 
   const Checklist = () => (
     <List>
-      {items.map((todo, idx) => (
+      {store.map((todo) => (
         <HStack
-          key={idx}
+          key={todo.id}
           spacing={"1rem"}
           sx={{
             flex: 1,
@@ -51,7 +96,7 @@ export default function Todolist() {
         >
           <Checkbox isChecked={todo.isChecked}></Checkbox>
           <ListItem
-            key={idx}
+            key={todo.id}
             sx={{
               display: "flex",
               flex: 1,
@@ -71,8 +116,9 @@ export default function Todolist() {
   );
 
   const AddItemListButton = () => (
-    <ListItem>
+    <ListItem key={0}>
       <HStack
+        key={0}
         spacing={"1rem"}
         sx={{
           flex: 1,
@@ -82,10 +128,14 @@ export default function Todolist() {
         }}
       >
         <Checkbox isDisabled isChecked={false} />
-        <Button leftIcon={<MdAdd />} colorScheme="gray" width="100%">
+        <Button
+          onClick={handleAddItem}
+          leftIcon={<MdAdd />}
+          colorScheme="gray"
+          width="100%"
+        >
           Item
         </Button>
-        {/* <Input width="50%" placeholder="Description" /> */}
       </HStack>
     </ListItem>
   );
