@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Text } from "@chakra-ui/react";
+import { Text, useToast } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 
 import CredentialsForm from "../components/CredentialsForm";
@@ -8,6 +8,7 @@ import { createUser } from "../utils/auth/createUser";
 
 export default function Register() {
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [isEmailError, setIsEmailError] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
@@ -41,9 +42,22 @@ export default function Register() {
       console.table({ errorCode, errorMessage });
       if (errorCode === "auth/email-already-in-use") {
         setIsEmailError(true);
+        toast({
+          title: "Email already in use",
+          position: "bottom",
+          description: "Already have an account?",
+          status: "error",
+          duration: 4000,
+        });
       }
       if (errorCode === "auth/weak-password") {
         setIsPasswordError(true);
+        toast({
+          title: "Password requires minimum 6 letters",
+          position: "bottom",
+          status: "error",
+          duration: 4000,
+        });
       }
       return;
     }
