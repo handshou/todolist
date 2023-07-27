@@ -22,6 +22,7 @@ export default function LogoutFooter() {
         bottom: 0,
         pt: "0.5rem",
         pl: "1rem",
+        bg: "white",
         height: "3rem",
         left: 0,
         right: 0,

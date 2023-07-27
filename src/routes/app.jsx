@@ -12,7 +12,7 @@ export default function App() {
       <Box sx={{ w: "100vw" }}>
         <Navbar />
         <Container>
-          <Box id="App" sx={{ pt: "4rem" }}>
+          <Box id="App" sx={{ pt: "4rem", pb: "4rem" }}>
             <Outlet />
           </Box>
         </Container>
