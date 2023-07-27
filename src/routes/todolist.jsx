@@ -38,8 +38,9 @@ export default function Todolist() {
 
   const Checklist = () => (
     <List>
-      {items.map((todo) => (
+      {items.map((todo, idx) => (
         <HStack
+          key={idx}
           spacing={"1rem"}
           sx={{
             flex: 1,
@@ -50,6 +51,7 @@ export default function Todolist() {
         >
           <Checkbox isChecked={todo.isChecked}></Checkbox>
           <ListItem
+            key={idx}
             sx={{
               display: "flex",
               flex: 1,
