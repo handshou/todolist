@@ -13,9 +13,6 @@ export default function App() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // const user = localStorage.getItem("auth");
-    // if (!auth && user) setAuth(user);
-
     if (pathname === "/") {
       if (!auth) navigate("login");
     }

@@ -1,15 +1,8 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "../context/MyProviders";
+import { useEffect } from "react";
 
 export default function ProtectedApp() {
   const navigate = useNavigate();
-  const { auth } = useContext(AuthContext);
-
-  // useEffect(() => {
-  //   const user = localStorage.getItem("auth");
-  //   if (!auth && user) setAuth(user);
-  // }, [auth, setAuth]);
 
   const user = localStorage.getItem("auth");
 

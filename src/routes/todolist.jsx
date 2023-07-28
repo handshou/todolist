@@ -41,22 +41,20 @@ export default function Todolist() {
   const { setStore } = useContext(StoreContext);
 
   useEffect(() => {
-    if (auth) {
-      const userChecklistDoc = doc(database, `checklists/${auth.uid}`);
-      const itemsCollectionRef = collection(userChecklistDoc, "items");
-      // Query Collection
-      const ChecklistItemsQuery = query(itemsCollectionRef);
-      const unsubscribeChecklistItemsQuery = onSnapshot(
-        ChecklistItemsQuery,
-        (querySnapshot) => {
-          setStore(querySnapshot.docs.map((e) => e.data()));
-        }
-      );
-      return () => {
-        unsubscribeChecklistItemsQuery();
-      };
-    }
-  }, [auth, database, setStore]);
+    if (!auth) return;
+
+    const userChecklistDoc = doc(database, `checklists/${auth.uid}`);
+    const itemsCollectionRef = collection(userChecklistDoc, "items");
+    // Query Collection
+    const ChecklistItemsQuery = query(itemsCollectionRef);
+    const unsubscribeChecklistItemsQuery = onSnapshot(
+      ChecklistItemsQuery,
+      (querySnapshot) => {
+        setStore(querySnapshot.docs.map((e) => e.data()));
+      }
+    );
+    return () => unsubscribeChecklistItemsQuery();
+  }, []);
 
   const handleAddItem = async () => {
     try {

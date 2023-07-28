@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 export const AuthContext = createContext(null);
 export const DatabaseContext = createContext(null);
@@ -18,6 +18,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+connectFirestoreEmulator(db, "127.0.0.1", 8080);
 
 export default function MyProviders({ children }) {
   const firebaseAuth = getAuth();
@@ -28,19 +29,23 @@ export default function MyProviders({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+      // TODO: Add firestore listener on auth change
+
       if (user) {
         setAuth(user);
 
         localStorage.setItem("auth", user);
       } else {
         // User is signed out
+
+        // TODO: Add firestore listener unmount on auth error
         setAuth(null);
         localStorage.clear();
       }
     });
-    return () => {
-      unsubscribe();
-    };
+
+    // TODO: Unsub firestore listener on unmount
+    return () => unsubscribe();
   }, [firebaseAuth]);
 
   const [auth, setAuth] = useState();
