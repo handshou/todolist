@@ -24,9 +24,15 @@ import { MdAdd } from "react-icons/md";
 import { AiTwotoneDelete } from "react-icons/ai";
 
 import TodoModal from "../components/TodoModal";
+import FileModal from "../components/FileModal";
 
 export default function Todolist() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isFileOpen,
+    onOpen: onFileOpen,
+    onClose: onFileClose,
+  } = useDisclosure();
 
   const { database } = useContext(DatabaseContext);
   const { auth } = useContext(AuthContext);
@@ -79,7 +85,7 @@ export default function Todolist() {
               justifyContent: "left",
             }}
           >
-            <Button variant="outline" width="6rem">
+            <Button onClick={onFileOpen} variant="outline" width="6rem">
               Attach
             </Button>
             <Text pl={"1rem"}>{todo.description}</Text>
@@ -99,7 +105,7 @@ export default function Todolist() {
           flex: 1,
           flexDir: "col",
           alignItems: "center",
-          pb: "0.3rem",
+          mb: "5rem",
         }}
       >
         <Checkbox isDisabled isChecked={false} />
@@ -122,7 +128,6 @@ export default function Todolist() {
           display: "flex",
           flexDirection: "column",
           alignItems: "space-between",
-          height: "85vh",
           p: "0",
         }}
       >
@@ -153,6 +158,18 @@ export default function Todolist() {
                 isOpen={isOpen}
                 onClose={onClose}
               />
+              <Box>
+                <FileModal
+                  title={"Attach file"}
+                  description={""}
+                  actionName={"Save"}
+                  colorScheme="blue"
+                  // actionIcon={<AiTwotoneDelete />}
+                  callback={handleModal}
+                  isOpen={isFileOpen}
+                  onClose={onFileClose}
+                />
+              </Box>
               <Button rightIcon={<FiEdit2 />} colorScheme="blue" size="sm">
                 Edit list
               </Button>
