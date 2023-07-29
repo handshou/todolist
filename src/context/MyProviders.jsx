@@ -1,7 +1,14 @@
 import { createContext, useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import {
+  getFirestore,
+  connectFirestoreEmulator,
+  query,
+  doc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
 
 export const AuthContext = createContext(null);
 export const DatabaseContext = createContext(null);
@@ -18,7 +25,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-connectFirestoreEmulator(db, "127.0.0.1", 8080);
+// connectFirestoreEmulator(db, "127.0.0.1", 8080);
 
 export default function MyProviders({ children }) {
   const firebaseAuth = getAuth();
@@ -27,30 +34,40 @@ export default function MyProviders({ children }) {
     setDatabase(db);
   }, []);
 
+  const [auth, setAuth] = useState();
+  const [database, setDatabase] = useState();
+  const [store, setStore] = useState([]);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
-      // TODO: Add firestore listener on auth change
-
       if (user) {
         setAuth(user);
 
         localStorage.setItem("auth", user);
       } else {
         // User is signed out
-
-        // TODO: Add firestore listener unmount on auth error
         setAuth(null);
         localStorage.clear();
       }
     });
 
     // TODO: Unsub firestore listener on unmount
-    return () => unsubscribe();
-  }, [firebaseAuth]);
+    return () => {
+      unsubscribe();
+    };
+  }, [auth, database, firebaseAuth]);
 
-  const [auth, setAuth] = useState();
-  const [database, setDatabase] = useState();
-  const [store, setStore] = useState([]);
+  useEffect(() => {
+    if (!auth) return; // auth.uid
+    const userChecklistDoc = doc(database, `checklists/${auth.uid}`);
+    const itemsCollectionRef = collection(userChecklistDoc, "items");
+    const ChecklistItemsQuery = query(itemsCollectionRef);
+    console.log("created snapshot listener");
+
+    return onSnapshot(ChecklistItemsQuery, (querySnapshot) => {
+      setStore(querySnapshot.docs.map((e) => e.data()));
+    });
+  }, [auth, database]);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import {
   Button,
   ListItem,
@@ -12,14 +12,7 @@ import {
   Container,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  query,
-  doc,
-  addDoc,
-  updateDoc,
-  collection,
-  onSnapshot,
-} from "firebase/firestore";
+import { doc, addDoc, updateDoc, collection } from "firebase/firestore";
 
 import {
   DatabaseContext,
@@ -39,22 +32,6 @@ export default function Todolist() {
   const { auth } = useContext(AuthContext);
   const { store } = useContext(StoreContext);
   const { setStore } = useContext(StoreContext);
-
-  useEffect(() => {
-    if (!auth) return;
-
-    const userChecklistDoc = doc(database, `checklists/${auth.uid}`);
-    const itemsCollectionRef = collection(userChecklistDoc, "items");
-    // Query Collection
-    const ChecklistItemsQuery = query(itemsCollectionRef);
-    const unsubscribeChecklistItemsQuery = onSnapshot(
-      ChecklistItemsQuery,
-      (querySnapshot) => {
-        setStore(querySnapshot.docs.map((e) => e.data()));
-      }
-    );
-    return () => unsubscribeChecklistItemsQuery();
-  }, []);
 
   const handleAddItem = async () => {
     try {
