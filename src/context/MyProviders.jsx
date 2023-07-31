@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { StorageErrorCode, getStorage } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import {
   getFirestore,
@@ -25,6 +26,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const fs = getStorage(app);
+
 // connectFirestoreEmulator(db, "127.0.0.1", 8080);
 
 export default function MyProviders({ children }) {
@@ -37,6 +40,7 @@ export default function MyProviders({ children }) {
   const [auth, setAuth] = useState();
   const [database, setDatabase] = useState();
   const [store, setStore] = useState([]);
+  const [storage, setStorage] = useState(fs);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
@@ -71,7 +75,9 @@ export default function MyProviders({ children }) {
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
-      <DatabaseContext.Provider value={{ database, setDatabase }}>
+      <DatabaseContext.Provider
+        value={{ database, setDatabase, storage, setStorage }}
+      >
         <StoreContext.Provider value={{ store, setStore }}>
           {children}
         </StoreContext.Provider>

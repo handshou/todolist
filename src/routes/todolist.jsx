@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import {
   Button,
   ListItem,
@@ -9,7 +9,9 @@ import {
   Text,
   Box,
   Stack,
+  VStack,
   Container,
+  Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
 import { doc, addDoc, updateDoc, collection } from "firebase/firestore";
@@ -19,7 +21,7 @@ import {
   AuthContext,
   StoreContext,
 } from "../context/MyProviders";
-import { FiEdit2 } from "react-icons/fi";
+import { AiFillEdit } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
 import { AiTwotoneDelete } from "react-icons/ai";
 
@@ -27,17 +29,18 @@ import TodoModal from "../components/TodoModal";
 import FileModal from "../components/FileModal";
 
 export default function Todolist() {
+  const itemIdRef = useRef({});
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isFileOpen,
     onOpen: onFileOpen,
     onClose: onFileClose,
-  } = useDisclosure();
+    getDisclosureProps,
+  } = useDisclosure({ id: 123 });
 
   const { database } = useContext(DatabaseContext);
   const { auth } = useContext(AuthContext);
   const { store } = useContext(StoreContext);
-  const { setStore } = useContext(StoreContext);
 
   const handleAddItem = async () => {
     try {
@@ -45,9 +48,11 @@ export default function Todolist() {
       const itemsCollectionRef = await collection(userChecklistDoc, "items");
       addDoc(itemsCollectionRef, {
         id: null,
-        isChecked: true,
-        link: "",
-        description: "Download installer",
+        isChecked: false,
+        url: null,
+        fileName: null,
+        fileSize: null,
+        description: "",
       }).then((docRef) => {
         updateDoc(docRef, {
           id: docRef.id,
@@ -62,39 +67,80 @@ export default function Todolist() {
     console.log("handle modal");
   };
 
-  const Checklist = () => (
-    <List>
-      {store.map((todo) => (
-        <HStack
-          key={todo.id}
-          spacing={"1rem"}
-          sx={{
-            flex: 1,
-            flexDir: "col",
-            alignItems: "center",
-            pb: "0.3rem",
-          }}
-        >
-          <Checkbox isChecked={todo.isChecked}></Checkbox>
-          <ListItem
-            key={todo.id}
+  const Checklist = () => {
+    return (
+      <List>
+        {store.length === 0 ? (
+          <VStack
             sx={{
-              display: "flex",
               flex: 1,
               alignItems: "center",
-              justifyContent: "left",
             }}
           >
-            <Button onClick={onFileOpen} variant="outline" width="6rem">
-              Attach
-            </Button>
-            <Text pl={"1rem"}>{todo.description}</Text>
-          </ListItem>
-        </HStack>
-      ))}
-      <AddItemListButton />
-    </List>
-  );
+            <Text size="xs" color="gray.400">
+              No items here
+            </Text>
+          </VStack>
+        ) : (
+          ""
+        )}
+        {store.map((todo) => (
+          <HStack
+            key={todo.id}
+            spacing={"1rem"}
+            sx={{
+              flex: 1,
+              flexDir: "col",
+              alignItems: "center",
+              pb: "0.3rem",
+            }}
+          >
+            <Checkbox isChecked={todo.isChecked}></Checkbox>
+            <ListItem
+              key={todo.id}
+              sx={{
+                display: "flex",
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "left",
+              }}
+            >
+              <Button
+                onClick={() => {
+                  itemIdRef.current = {};
+                  itemIdRef.current.itemId = todo.id;
+                  itemIdRef.current.url = todo.url;
+                  itemIdRef.current.fileName = todo.fileName;
+                  itemIdRef.current.fileSize = todo.fileSize;
+                  onFileOpen();
+                }}
+                variant="outline"
+                fontSize={"xs"}
+              >
+                <Text>Attach</Text>
+              </Button>
+              <Text pl={"1rem"} fontWeight={"700"}>
+                {todo.description}
+              </Text>
+              <Spacer />
+              <Button
+                onClick={onFileOpen}
+                mr="0.3rem"
+                variant="outline"
+                colorScheme="blue"
+              >
+                <AiFillEdit />
+              </Button>
+              <Button onClick={onFileOpen} variant="outline" colorScheme="red">
+                <AiTwotoneDelete />
+              </Button>
+            </ListItem>
+          </HStack>
+        ))}
+        <AddItemListButton />
+      </List>
+    );
+  };
 
   const AddItemListButton = () => (
     <ListItem key={0}>
@@ -108,14 +154,14 @@ export default function Todolist() {
           mb: "5rem",
         }}
       >
-        <Checkbox isDisabled isChecked={false} />
+        {/* <Checkbox isDisabled isChecked={false} /> */}
         <Button
           onClick={handleAddItem}
           leftIcon={<MdAdd />}
           colorScheme="gray"
           width="100%"
         >
-          Item
+          {/* Item */}
         </Button>
       </HStack>
     </ListItem>
@@ -140,14 +186,6 @@ export default function Todolist() {
           >
             <Heading>Checklist</Heading>
             <HStack>
-              <Button
-                leftIcon={<AiTwotoneDelete />}
-                colorScheme="red"
-                size="sm"
-                onClick={onOpen}
-              >
-                Delete selected
-              </Button>
               <TodoModal
                 title={"Delete items"}
                 description={""}
@@ -160,6 +198,11 @@ export default function Todolist() {
               />
               <Box>
                 <FileModal
+                  {...getDisclosureProps}
+                  itemId={itemIdRef.current.itemId}
+                  url={itemIdRef.current.url}
+                  fileSize={itemIdRef.current.fileSize}
+                  fileName={itemIdRef.current.fileName}
                   title={"Attach file"}
                   description={""}
                   actionName={"Save"}
@@ -170,9 +213,17 @@ export default function Todolist() {
                   onClose={onFileClose}
                 />
               </Box>
-              <Button rightIcon={<FiEdit2 />} colorScheme="blue" size="sm">
+              {/* <Button
+                leftIcon={<AiTwotoneDelete />}
+                colorScheme="red"
+                size="sm"
+                onClick={onOpen}
+              >
+                Delete selected
+              </Button> */}
+              {/* <Button rightIcon={<FiEdit2 />} colorScheme="blue" size="sm">
                 Edit list
-              </Button>
+              </Button> */}
             </HStack>
           </Stack>
           <Checklist />

@@ -7,20 +7,26 @@ import {
   ModalContent,
   ModalCloseButton,
   ModalFooter,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import Dropzone from "../components/Dropzone";
 
-export default function FileModal({
-  isOpen,
-  onClose,
-  title = "Modal Title",
-  description = "Description",
-  callback,
-  actionName = "Secondary Action",
-  actionIcon,
-  colorScheme,
-}) {
+export default function FileModal(props) {
+  const {
+    itemId,
+    url,
+    fileName,
+    fileSize,
+    isOpen,
+    onClose,
+    title = "Modal Title",
+    description = "Description",
+    callback,
+    actionName = "Secondary Action",
+    actionIcon,
+    colorScheme,
+  } = props;
+  console.log(props);
   return (
     <>
       <Modal
@@ -35,7 +41,14 @@ export default function FileModal({
           <ModalCloseButton />
           <ModalBody sx={{ h: "200px" }}>
             {description}
-            <Dropzone content={<Text color="blue.600">Browse or drop your file here</Text>} />
+            {!url && (
+              <Dropzone
+                itemId={itemId}
+                content={
+                  <Text color="blue.600">Browse or drop your file here</Text>
+                }
+              />
+            )}
           </ModalBody>
           <ModalFooter>
             <Button
