@@ -45,11 +45,19 @@ export default function EditInputField({
           {...props}
           value={value}
           autoFocus={autoFocus}
-          sx={{ border: "1px", borderColor: "blue.100" }}
+          sx={{ border: "1px", borderColor: "blue.200" }}
         />
       )}
       {!isEditing && (
-        <Text {...props} pl="1rem" fontWeight="600">
+        <Text
+          {...props}
+          maxWidth={"100%"}
+          w={"100%"}
+          pl="1rem"
+          fontWeight="600"
+          noOfLines={3}
+          textOverflow="ellipsis"
+        >
           {value}
         </Text>
       )}
@@ -60,7 +68,6 @@ export default function EditInputField({
           setIsEditing(!isEditing);
         }}
         ml="0.3rem"
-        mr="0.3rem"
         variant="ghost"
         colorScheme="blue"
         fontSize="xl"

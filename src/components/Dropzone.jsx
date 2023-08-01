@@ -10,8 +10,11 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { MyNoRenderer } from "../components/FileModal";
+
 function Dropzone(props) {
-  const { content, url, itemId, itemRef, ...rest } = props;
+  const { content, url, itemId, itemRef, isLoading, ...rest } = props;
   const [file, setFile] = useState(url);
 
   const onDrop = useCallback(
@@ -25,6 +28,7 @@ function Dropzone(props) {
       setFile(newFile);
 
       itemRef.current.itemId = itemId;
+      itemRef.current.fileType = acceptedFiles[0].type;
       itemRef.current.fileName = acceptedFiles[0].name;
       itemRef.current.file = acceptedFiles[0];
       itemRef.current.fileSize = acceptedFiles[0].size;
@@ -61,9 +65,25 @@ function Dropzone(props) {
         <Input variant="main" {...getInputProps()} />
         <Button variant="no-effects">{content}</Button>
       </Flex>
-      {file && (
-        <VStack sx={{ maxH: "30vh", pt: "0.3rem" }}>
-          <img
+      {file && !isLoading && (
+        <VStack sx={{ maxH: "35vh", pt: "0.3rem" }}>
+          <DocViewer
+            documents={[{ uri: file.preview }]}
+            pluginRenderers={DocViewerRenderers}
+            config={{
+              header: {
+                disableHeader: true,
+                disableFileName: true,
+                retainURLParams: false,
+              },
+              noRenderer: {
+                overrideComponent: MyNoRenderer,
+              },
+            }}
+            prefetchMethod="GET"
+          />
+          {/* {() => URL.revokeObjectURL(file.preview)} */}
+          {/* <img
             alt="file"
             src={file.preview}
             style={{
@@ -75,7 +95,7 @@ function Dropzone(props) {
             onLoad={() => {
               URL.revokeObjectURL(file.preview);
             }}
-          />
+          /> */}
         </VStack>
       )}
     </>

@@ -14,6 +14,20 @@ import {
 import Dropzone from "../components/Dropzone";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
+export const MyNoRenderer = ({ document, fileName }) => {
+  const fileText = fileName || document?.fileType || "";
+
+  if (fileText) {
+    return (
+      <Text w="100%" p="2rem" textAlign="center">
+        Render: file is not supported
+      </Text>
+    );
+  }
+
+  return <div>No Renderer Error!</div>;
+};
+
 export default function FileModal(props) {
   const {
     itemId,
@@ -36,20 +50,6 @@ export default function FileModal(props) {
       uri: url,
     },
   ];
-
-  const MyNoRenderer = ({ document, fileName }) => {
-    const fileText = fileName || document?.fileType || "";
-
-    if (fileText) {
-      return (
-        <Text w="100%" p="2rem" textAlign="center">
-          Render: file is not supported
-        </Text>
-      );
-    }
-
-    return <div>No Renderer Error!</div>;
-  };
 
   // const [uploaded, setUploaded] = useState(String(url).length === 0);
 
@@ -90,6 +90,7 @@ export default function FileModal(props) {
               {!url && (
                 <Dropzone
                   sx={{ h: "20vh" }}
+                  isLoading={isLoading}
                   url={url}
                   itemId={itemId}
                   itemRef={itemRef}

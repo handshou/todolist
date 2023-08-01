@@ -36,6 +36,10 @@ import {
   StoreContext,
 } from "../context/MyProviders";
 import { AiOutlineFileAdd } from "react-icons/ai";
+import { AiFillFileImage } from "react-icons/ai";
+import { AiFillFileUnknown } from "react-icons/ai";
+import { AiFillFileZip } from "react-icons/ai";
+import { AiFillFilePdf } from "react-icons/ai";
 import { GrFormView } from "react-icons/gr";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { BiLinkExternal } from "react-icons/bi";
@@ -44,6 +48,24 @@ import { MdAdd } from "react-icons/md";
 import TodoModal from "../components/TodoModal";
 import FileModal from "../components/FileModal";
 import EditInputField from "../components/EditInputField";
+
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { MyNoRenderer } from "../components/FileModal";
+
+const FileIcon = ({ type }) => {
+  switch (type) {
+    case "application/pdf":
+      return <AiFillFilePdf />;
+    case "application/zip":
+      return <AiFillFileZip />;
+    case "image/jpeg":
+    case "image/png":
+    case "image/bmp":
+      return <AiFillFileImage />;
+    default:
+      return <GrFormView />;
+  }
+};
 
 export default function Todolist() {
   const itemIdRef = useRef({});
@@ -75,6 +97,7 @@ export default function Todolist() {
         url: null,
         fileName: null,
         fileSize: null,
+        fileType: null,
         description: "",
         createdAt: new Date(),
       }).then((docRef) => {
@@ -171,6 +194,7 @@ export default function Todolist() {
             url: downloadURL,
             fileName: itemIdRef.current.fileName,
             fileSize: itemIdRef.current.fileSize,
+            fileType: itemIdRef.current.fileType,
           });
           setUploadLoading(false);
           onFileClose();
@@ -196,14 +220,17 @@ export default function Todolist() {
     });
   };
 
-  const handleCheckbox = async () => {
-    const docRef = await doc(
-      database,
-      `checklists/${auth.uid}/items/${itemIdRef.current.itemId}`
-    );
-    updateDoc(docRef, {
-      isChecked: itemIdRef.current.isChecked,
-    });
+  const handleCheckbox = () => {
+    const delay = itemIdRef.current.isChecked ? 200 : 0;
+    setTimeout(async () => {
+      const docRef = await doc(
+        database,
+        `checklists/${auth.uid}/items/${itemIdRef.current.itemId}`
+      );
+      updateDoc(docRef, {
+        isChecked: itemIdRef.current.isChecked,
+      });
+    }, delay);
   };
 
   const handleDownload = () => {
@@ -253,17 +280,20 @@ export default function Todolist() {
             }}
           >
             <Checkbox
+              size="lg"
+              // initial={true}
               onChange={() => {
                 itemIdRef.current.itemId = todo.id;
                 itemIdRef.current.isChecked = !todo.isChecked;
                 handleCheckbox();
               }}
-              isChecked={todo.isChecked}
+              isChecked={todo.isChecked ? todo.isChecked : undefined}
             ></Checkbox>
             <ListItem
               id={todo.id}
               key={todo.id}
               sx={{
+                borderRadius: "0.5rem",
                 bg:
                   itemIdRef.current.itemId ===
                   todo.id /*} && (isFileOpen || isOpen)*/
@@ -282,6 +312,7 @@ export default function Todolist() {
             >
               {!todo.url ? (
                 <Button
+                  // sx={{ p: 0 }}
                   onClick={() => {
                     itemIdRef.current = {};
                     itemIdRef.current.itemId = todo.id;
@@ -289,6 +320,7 @@ export default function Todolist() {
                     console.log(todo.url);
                     itemIdRef.current.fileName = todo.fileName;
                     itemIdRef.current.fileSize = todo.fileSize;
+                    itemIdRef.current.description = todo.description;
                     onFileOpen();
                   }}
                   variant="solid"
@@ -300,6 +332,7 @@ export default function Todolist() {
                 </Button>
               ) : (
                 <Button
+                  // sx={{ p: 0 }}
                   onClick={() => {
                     itemIdRef.current = {};
                     itemIdRef.current.itemId = todo.id;
@@ -307,6 +340,7 @@ export default function Todolist() {
                     console.log(todo.url);
                     itemIdRef.current.fileName = todo.fileName;
                     itemIdRef.current.fileSize = todo.fileSize;
+                    itemIdRef.current.description = todo.description;
                     onFileOpen();
                   }}
                   variant="ghost"
@@ -314,9 +348,10 @@ export default function Todolist() {
                   colorScheme="blue"
                 >
                   {/* <Text w="3rem">View</Text> */}
-                  <GrFormView />
+                  <FileIcon type={todo.fileType} />
                 </Button>
               )}
+              {/* <Box width="50vw"> */}
               <EditInputField
                 itemIdRef={itemIdRef}
                 itemId={todo.id}
@@ -327,10 +362,14 @@ export default function Todolist() {
                 initialIsEditing={todo.description.length === 0}
                 handleSubmit={handleEditSubmit}
               />
+              {/* </Box> */}
               <Button
                 onClick={() => {
                   itemIdRef.current.itemId = todo.id;
                   itemIdRef.current.fileName = todo.fileName;
+                  itemIdRef.current.url = todo.url;
+                  itemIdRef.current.fileSize = todo.fileSize;
+                  itemIdRef.current.description = todo.description;
                   onDeleteOpen();
                 }}
                 isLoading={
@@ -398,7 +437,34 @@ export default function Todolist() {
             <HStack>
               <TodoModal
                 title={"Delete item"}
-                description={""}
+                description={
+                  <Stack>
+                    <Text
+                      noOfLines={3}
+                      fontWeight={600}
+                      textAlign={"center"}
+                      maxWidth="100%"
+                      mb={"0.3rem"}
+                    >
+                      {itemIdRef.current.description}
+                    </Text>
+                    {itemIdRef.current.url && (
+                      <HStack pb="0.3rem" justifyContent="center">
+                        <Badge
+                          sx={{
+                            textOverflow: "ellipsis",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            maxWidth: "100%",
+                          }}
+                        >
+                          {itemIdRef.current.fileName}
+                        </Badge>
+                        <Badge>{itemIdRef.current.fileSize / 1000} kB</Badge>
+                      </HStack>
+                    )}
+                  </Stack>
+                }
                 actionName={"Delete item"}
                 colorScheme="red"
                 actionIcon={<AiTwotoneDelete />}
@@ -417,21 +483,32 @@ export default function Todolist() {
                   isLoading={isUploadLoading}
                   title={itemIdRef.current.url ? "View file" : "Attach file"}
                   description={
-                    itemIdRef.current.url && (
-                      <HStack pb="0.3rem" justifyContent="left">
-                        <Badge
-                          sx={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "100%",
-                          }}
-                        >
-                          {itemIdRef.current.fileName}
-                        </Badge>
-                        <Badge>{itemIdRef.current.fileSize / 1000} kB</Badge>
-                      </HStack>
-                    )
+                    <>
+                      <Text
+                        noOfLines={3}
+                        fontWeight={600}
+                        textAlign={"center"}
+                        maxWidth="100%"
+                        mb={"0.3rem"}
+                      >
+                        {itemIdRef.current.description}
+                      </Text>
+                      {itemIdRef.current.url && (
+                        <HStack pb="0.3rem" justifyContent="center">
+                          <Badge
+                            sx={{
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              maxWidth: "100%",
+                            }}
+                          >
+                            {itemIdRef.current.fileName}
+                          </Badge>
+                          <Badge>{itemIdRef.current.fileSize / 1000} kB</Badge>
+                        </HStack>
+                      )}
+                    </>
                   }
                   actionName={itemIdRef.current.url ? "Open" : "Upload"}
                   colorScheme="blue"
