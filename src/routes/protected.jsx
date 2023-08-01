@@ -7,7 +7,7 @@ export default function ProtectedApp() {
   const user = localStorage.getItem("auth");
 
   useEffect(() => {
-    if (!user) navigate("login");
+    if (!user) navigate("login", { replace: true });
   }, [user, navigate]);
 
   if (!user) return;
