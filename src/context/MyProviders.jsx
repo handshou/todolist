@@ -1,11 +1,12 @@
 import { createContext, useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { StorageErrorCode, getStorage } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import {
   getFirestore,
   connectFirestoreEmulator,
   query,
+  orderBy,
   doc,
   collection,
   onSnapshot,
@@ -65,7 +66,7 @@ export default function MyProviders({ children }) {
     if (!auth) return; // auth.uid
     const userChecklistDoc = doc(database, `checklists/${auth.uid}`);
     const itemsCollectionRef = collection(userChecklistDoc, "items");
-    const ChecklistItemsQuery = query(itemsCollectionRef);
+    const ChecklistItemsQuery = query(itemsCollectionRef, orderBy("createdAt"));
     console.log("created snapshot listener");
 
     return onSnapshot(ChecklistItemsQuery, (querySnapshot) => {

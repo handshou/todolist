@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import {
   Button,
   ListItem,
@@ -11,26 +11,49 @@ import {
   Stack,
   VStack,
   Container,
-  Spacer,
+  Badge,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { doc, addDoc, updateDoc, collection } from "firebase/firestore";
+
+import {
+  doc,
+  addDoc,
+  updateDoc,
+  collection,
+  deleteDoc,
+} from "firebase/firestore";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 
 import {
   DatabaseContext,
   AuthContext,
   StoreContext,
 } from "../context/MyProviders";
-import { AiFillEdit } from "react-icons/ai";
-import { MdAdd } from "react-icons/md";
+import { AiOutlineFileAdd } from "react-icons/ai";
+import { GrFormView } from "react-icons/gr";
 import { AiTwotoneDelete } from "react-icons/ai";
+import { BiLinkExternal } from "react-icons/bi";
+import { MdAdd } from "react-icons/md";
 
 import TodoModal from "../components/TodoModal";
 import FileModal from "../components/FileModal";
+import EditInputField from "../components/EditInputField";
 
 export default function Todolist() {
   const itemIdRef = useRef({});
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+  const [isUploadLoading, setUploadLoading] = useState(false);
   const {
     isOpen: isFileOpen,
     onOpen: onFileOpen,
@@ -38,7 +61,7 @@ export default function Todolist() {
     getDisclosureProps,
   } = useDisclosure({ id: 123 });
 
-  const { database } = useContext(DatabaseContext);
+  const { database, storage } = useContext(DatabaseContext);
   const { auth } = useContext(AuthContext);
   const { store } = useContext(StoreContext);
 
@@ -53,6 +76,7 @@ export default function Todolist() {
         fileName: null,
         fileSize: null,
         description: "",
+        createdAt: new Date(),
       }).then((docRef) => {
         updateDoc(docRef, {
           id: docRef.id,
@@ -65,6 +89,140 @@ export default function Todolist() {
 
   const handleModal = () => {
     console.log("handle modal");
+  };
+
+  const handleDeleteModal = async () => {
+    itemIdRef.current.isLoading = true;
+    const docRef = await doc(
+      database,
+      `checklists/${auth.uid}/items/${itemIdRef.current.itemId}`
+    );
+    onDeleteClose();
+
+    const deleteObjectRef = await ref(
+      storage,
+      `${auth.uid}/${itemIdRef.current.itemId}/${itemIdRef.current.fileName}`
+    );
+    if (itemIdRef.current.url) deleteObject(deleteObjectRef);
+
+    setTimeout(() => {
+      itemIdRef.current.isLoading = false;
+      deleteDoc(docRef);
+    }, 1000);
+  };
+
+  const handleUpload = () => {
+    if (!itemIdRef.current.fileName) {
+      toast({
+        title: "No file found",
+        description: "Browse or drag a file",
+        position: "bottom",
+        status: "info",
+        duration: 4000,
+      });
+      return;
+    }
+    setUploadLoading(true);
+    const storageRef = ref(
+      storage,
+      `${auth.uid}/${itemIdRef.current.itemId}/${itemIdRef.current.fileName}`
+    );
+    const uploadTask = uploadBytesResumable(storageRef, itemIdRef.current.file);
+
+    // // 'file' comes from the Blob or File API
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(
+          "Upload for " +
+            itemIdRef.current.itemId +
+            " is " +
+            progress +
+            "% done"
+        );
+        switch (snapshot.state) {
+          default:
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+        }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+        setUploadLoading(false);
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          console.log("File available at", downloadURL);
+          const docRef = await doc(
+            database,
+            `checklists/${auth.uid}/items/${itemIdRef.current.itemId}`
+          );
+          updateDoc(docRef, {
+            url: downloadURL,
+            fileName: itemIdRef.current.fileName,
+            fileSize: itemIdRef.current.fileSize,
+          });
+          setUploadLoading(false);
+          onFileClose();
+          console.log(
+            document
+              .getElementById(itemIdRef.current.itemId)
+              .getBoundingClientRect().top
+          );
+        });
+      }
+    );
+  };
+
+  const handleEditSubmit = async ({ initialValue, value }) => {
+    if (initialValue === value) return;
+
+    const docRef = await doc(
+      database,
+      `checklists/${auth.uid}/items/${itemIdRef.current.itemId}`
+    );
+    updateDoc(docRef, {
+      description: itemIdRef.current.description,
+    });
+  };
+
+  const handleCheckbox = async () => {
+    const docRef = await doc(
+      database,
+      `checklists/${auth.uid}/items/${itemIdRef.current.itemId}`
+    );
+    updateDoc(docRef, {
+      isChecked: itemIdRef.current.isChecked,
+    });
+  };
+
+  const handleDownload = () => {
+    const url = itemIdRef.current.url;
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "blob";
+    xhr.onload = (event) => {
+      const blob = xhr.response;
+    };
+    xhr.open("GET", url);
+    xhr.send();
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.download = url.split("/").pop();
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   const Checklist = () => {
@@ -92,46 +250,98 @@ export default function Todolist() {
               flex: 1,
               flexDir: "col",
               alignItems: "center",
-              pb: "0.3rem",
             }}
           >
-            <Checkbox isChecked={todo.isChecked}></Checkbox>
+            <Checkbox
+              onChange={() => {
+                itemIdRef.current.itemId = todo.id;
+                itemIdRef.current.isChecked = !todo.isChecked;
+                handleCheckbox();
+              }}
+              isChecked={todo.isChecked}
+            ></Checkbox>
             <ListItem
+              id={todo.id}
               key={todo.id}
               sx={{
+                bg:
+                  itemIdRef.current.itemId ===
+                  todo.id /*} && (isFileOpen || isOpen)*/
+                    ? "blue.100"
+                    : "",
                 display: "flex",
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "left",
+                pl: "0.3rem",
+                pt: "0.3rem",
+                pb: "0.3rem",
+                borderBottom: "1px",
+                borderColor: "blue.50",
               }}
             >
+              {!todo.url ? (
+                <Button
+                  onClick={() => {
+                    itemIdRef.current = {};
+                    itemIdRef.current.itemId = todo.id;
+                    itemIdRef.current.url = todo.url;
+                    console.log(todo.url);
+                    itemIdRef.current.fileName = todo.fileName;
+                    itemIdRef.current.fileSize = todo.fileSize;
+                    onFileOpen();
+                  }}
+                  variant="solid"
+                  fontSize={"xl"}
+                  colorScheme="gray"
+                >
+                  {/* <Text w="3rem">Attach</Text> */}
+                  <AiOutlineFileAdd />
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    itemIdRef.current = {};
+                    itemIdRef.current.itemId = todo.id;
+                    itemIdRef.current.url = todo.url;
+                    console.log(todo.url);
+                    itemIdRef.current.fileName = todo.fileName;
+                    itemIdRef.current.fileSize = todo.fileSize;
+                    onFileOpen();
+                  }}
+                  variant="ghost"
+                  fontSize={"xl"}
+                  colorScheme="blue"
+                >
+                  {/* <Text w="3rem">View</Text> */}
+                  <GrFormView />
+                </Button>
+              )}
+              <EditInputField
+                itemIdRef={itemIdRef}
+                itemId={todo.id}
+                ml="0.3rem"
+                w="100%"
+                onClick={() => (itemIdRef.current.itemId = todo.id)}
+                initialValue={todo.description}
+                initialIsEditing={todo.description.length === 0}
+                handleSubmit={handleEditSubmit}
+              />
               <Button
                 onClick={() => {
-                  itemIdRef.current = {};
                   itemIdRef.current.itemId = todo.id;
-                  itemIdRef.current.url = todo.url;
                   itemIdRef.current.fileName = todo.fileName;
-                  itemIdRef.current.fileSize = todo.fileSize;
-                  onFileOpen();
+                  onDeleteOpen();
                 }}
-                variant="outline"
-                fontSize={"xs"}
-              >
-                <Text>Attach</Text>
-              </Button>
-              <Text pl={"1rem"} fontWeight={"700"}>
-                {todo.description}
-              </Text>
-              <Spacer />
-              <Button
-                onClick={onFileOpen}
+                isLoading={
+                  itemIdRef.current.isLoading &&
+                  itemIdRef.current.itemId === todo.id
+                }
+                variant="ghost"
+                colorScheme="red"
                 mr="0.3rem"
-                variant="outline"
-                colorScheme="blue"
+                fontSize="xl"
               >
-                <AiFillEdit />
-              </Button>
-              <Button onClick={onFileOpen} variant="outline" colorScheme="red">
                 <AiTwotoneDelete />
               </Button>
             </ListItem>
@@ -151,7 +361,7 @@ export default function Todolist() {
           flex: 1,
           flexDir: "col",
           alignItems: "center",
-          mb: "5rem",
+          my: "1rem",
         }}
       >
         {/* <Checkbox isDisabled isChecked={false} /> */}
@@ -161,7 +371,7 @@ export default function Todolist() {
           colorScheme="gray"
           width="100%"
         >
-          {/* Item */}
+          Add item
         </Button>
       </HStack>
     </ListItem>
@@ -187,28 +397,49 @@ export default function Todolist() {
             <Heading>Checklist</Heading>
             <HStack>
               <TodoModal
-                title={"Delete items"}
+                title={"Delete item"}
                 description={""}
-                actionName={"Delete items"}
-                colorScheme="blue"
+                actionName={"Delete item"}
+                colorScheme="red"
                 actionIcon={<AiTwotoneDelete />}
-                callback={handleModal}
-                isOpen={isOpen}
-                onClose={onClose}
+                callback={handleDeleteModal}
+                isOpen={isDeleteOpen}
+                onClose={onDeleteClose}
               />
               <Box>
                 <FileModal
                   {...getDisclosureProps}
                   itemId={itemIdRef.current.itemId}
+                  itemRef={itemIdRef}
                   url={itemIdRef.current.url}
                   fileSize={itemIdRef.current.fileSize}
                   fileName={itemIdRef.current.fileName}
-                  title={"Attach file"}
-                  description={""}
-                  actionName={"Save"}
+                  isLoading={isUploadLoading}
+                  title={itemIdRef.current.url ? "View file" : "Attach file"}
+                  description={
+                    itemIdRef.current.url && (
+                      <HStack pb="0.3rem" justifyContent="left">
+                        <Badge
+                          sx={{
+                            textOverflow: "ellipsis",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            maxWidth: "100%",
+                          }}
+                        >
+                          {itemIdRef.current.fileName}
+                        </Badge>
+                        <Badge>{itemIdRef.current.fileSize / 1000} kB</Badge>
+                      </HStack>
+                    )
+                  }
+                  actionName={itemIdRef.current.url ? "Open" : "Upload"}
                   colorScheme="blue"
                   // actionIcon={<AiTwotoneDelete />}
-                  callback={handleModal}
+                  callback={
+                    itemIdRef.current.url ? handleDownload : handleUpload
+                  }
+                  actionIcon={itemIdRef.current.url && <BiLinkExternal />}
                   isOpen={isFileOpen}
                   onClose={onFileClose}
                 />

@@ -7,7 +7,9 @@ import {
   ModalContent,
   ModalCloseButton,
   ModalFooter,
+  VStack,
   Text,
+  Box,
 } from "@chakra-ui/react";
 import Dropzone from "../components/Dropzone";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
@@ -15,9 +17,9 @@ import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 export default function FileModal(props) {
   const {
     itemId,
+    itemRef,
+    isLoading = false,
     url,
-    fileName,
-    fileSize,
     isOpen,
     onClose,
     title = "Modal Title",
@@ -30,8 +32,26 @@ export default function FileModal(props) {
   // console.log(props);
 
   const docs = [
-    { uri: url }, // Remote file
+    {
+      uri: url,
+    },
   ];
+
+  const MyNoRenderer = ({ document, fileName }) => {
+    const fileText = fileName || document?.fileType || "";
+
+    if (fileText) {
+      return (
+        <Text w="100%" p="2rem" textAlign="center">
+          Render: file is not supported
+        </Text>
+      );
+    }
+
+    return <div>No Renderer Error!</div>;
+  };
+
+  // const [uploaded, setUploaded] = useState(String(url).length === 0);
 
   return (
     <>
@@ -45,23 +65,41 @@ export default function FileModal(props) {
         <ModalContent>
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody sx={{ h: "200px" }}>
-            {description}
-            {url && (
-              <DocViewer
-                documents={docs}
-                pluginRenderers={DocViewerRenderers}
-              />
-            )}
-            {!url && (
-              <Dropzone
-                itemId={itemId}
-                content={
-                  <Text color="blue.600">Browse or drop your file here</Text>
-                }
-              />
-            )}
-          </ModalBody>
+          <Box minH="20vh">
+            <ModalBody>
+              {description}
+              {url && (
+                <VStack maxH="50vh">
+                  <DocViewer
+                    documents={docs}
+                    pluginRenderers={DocViewerRenderers}
+                    config={{
+                      header: {
+                        disableHeader: true,
+                        disableFileName: true,
+                        retainURLParams: false,
+                      },
+                      noRenderer: {
+                        overrideComponent: MyNoRenderer,
+                      },
+                    }}
+                    prefetchMethod="GET"
+                  />
+                </VStack>
+              )}
+              {!url && (
+                <Dropzone
+                  sx={{ h: "20vh" }}
+                  url={url}
+                  itemId={itemId}
+                  itemRef={itemRef}
+                  content={
+                    <Text color="blue.600">Browse or drop your file here</Text>
+                  }
+                />
+              )}
+            </ModalBody>
+          </Box>
           <ModalFooter>
             <Button
               colorScheme="blue"
@@ -73,6 +111,7 @@ export default function FileModal(props) {
             </Button>
             <Button
               variant="solid"
+              isLoading={isLoading}
               colorScheme={colorScheme}
               onClick={() => callback()}
               leftIcon={actionIcon}
