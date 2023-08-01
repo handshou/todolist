@@ -10,6 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Dropzone from "../components/Dropzone";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 export default function FileModal(props) {
   const {
@@ -26,7 +27,12 @@ export default function FileModal(props) {
     actionIcon,
     colorScheme,
   } = props;
-  console.log(props);
+  // console.log(props);
+
+  const docs = [
+    { uri: url }, // Remote file
+  ];
+
   return (
     <>
       <Modal
@@ -41,6 +47,12 @@ export default function FileModal(props) {
           <ModalCloseButton />
           <ModalBody sx={{ h: "200px" }}>
             {description}
+            {url && (
+              <DocViewer
+                documents={docs}
+                pluginRenderers={DocViewerRenderers}
+              />
+            )}
             {!url && (
               <Dropzone
                 itemId={itemId}
