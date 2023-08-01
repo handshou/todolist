@@ -4,6 +4,8 @@ import {
   Flex,
   Input,
   VStack,
+  HStack,
+  Badge,
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
@@ -66,24 +68,38 @@ function Dropzone(props) {
         <Button variant="no-effects">{content}</Button>
       </Flex>
       {file && !isLoading && (
-        <VStack sx={{ maxH: "35vh", pt: "0.3rem" }}>
-          <DocViewer
-            documents={[{ uri: file.preview }]}
-            pluginRenderers={DocViewerRenderers}
-            config={{
-              header: {
-                disableHeader: true,
-                disableFileName: true,
-                retainURLParams: false,
-              },
-              noRenderer: {
-                overrideComponent: MyNoRenderer,
-              },
-            }}
-            prefetchMethod="GET"
-          />
-          {/* {() => URL.revokeObjectURL(file.preview)} */}
-          {/* <img
+        <>
+          <HStack pb="0.3rem" pt="0.3rem" justifyContent="center">
+            <Badge
+              sx={{
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                maxWidth: "100%",
+              }}
+            >
+              {itemRef.current.fileName}
+            </Badge>
+            <Badge>{itemRef.current.fileSize / 1000} kB</Badge>
+          </HStack>
+          <VStack sx={{ maxH: "35vh", pt: "0.3rem" }}>
+            <DocViewer
+              documents={[{ uri: file.preview }]}
+              pluginRenderers={DocViewerRenderers}
+              config={{
+                header: {
+                  disableHeader: true,
+                  disableFileName: true,
+                  retainURLParams: false,
+                },
+                noRenderer: {
+                  overrideComponent: MyNoRenderer,
+                },
+              }}
+              prefetchMethod="GET"
+            />
+            {/* {() => URL.revokeObjectURL(file.preview)} */}
+            {/* <img
             alt="file"
             src={file.preview}
             style={{
@@ -96,7 +112,8 @@ function Dropzone(props) {
               URL.revokeObjectURL(file.preview);
             }}
           /> */}
-        </VStack>
+          </VStack>
+        </>
       )}
     </>
   );
