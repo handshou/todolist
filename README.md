@@ -6,13 +6,13 @@ See: live demo @ https://todolist-hansel.web.app
 
 ### Quick start video
 
-<figure class="video_container">
+<!-- <figure class="video_container">
   <video controls="true" allowfullscreen="true" poster="public/userdemo.png">
     <source src="public/userdemo.mp4" type="video/mp4">
   </video>
-</figure>
+</figure> -->
 
-https://github.com/handshou/todolist/raw/main/public/userdemo.mp4
+<video poster="public/userdemo.png" src="https://github.com/handshou/todolist/raw/main/public/userdemo.mp4" />
 
 ## Table of contents
 
