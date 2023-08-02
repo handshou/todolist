@@ -18,7 +18,7 @@ https://github.com/handshou/todolist/assets/12982599/24213dc6-dce6-4f43-a787-efd
     - [Account management](#account-management)
 1. [Getting started](#getting-started)
    - [Online](#online)
-   - [Offline, local](#offline-local)
+   - [Local](#offline-local)
 1. [Features (How-to)](#features-how-to)
    - [Register](#register)
    - [Login, logout](#login-logout)
@@ -113,6 +113,8 @@ They are **stored** in your browser session (localstorage).
 
 ## Getting started
 
+Try the online version of this web application. For more experienced users, you may try to run it locally (configuration detailed below).
+
 ### Online
 
 It is recommended to try out the live demo @ https://todolist-hansel.web.app
@@ -145,7 +147,7 @@ Or dive right in!
 >
 > *Online* (recommended)
 >
-> [`https://todolist-hansel.web.app/login`](`https://todolist-hansel.web.app/login` ) 
+> [https://todolist-hansel.web.app/login](https://todolist-hansel.web.app/login) 
 >
 > *Local*
 >
