@@ -62,7 +62,7 @@ Updates about the development process.
 
 A showcase of the user interface on an iPhone SE 3, Safari browser.
 
-#### Login, logout
+#### Login, logout UI
 <p float="left">
    <img alt="Login" src="./public/preview1.png" width="375" />
    <img alt="Logout" src="./public/preview8.png" width="375" />
