@@ -12,6 +12,16 @@ See: live demo @ https://todolist-hansel.web.app
   </video>
 </figure> -->
 
+
+
+
+https://github.com/handshou/todolist/assets/12982599/24213dc6-dce6-4f43-a787-efd1554690b4
+
+
+
+https://github.com/handshou/todolist/assets/12982599/871908a7-395b-4266-8282-40def598f239
+
+
 <video src="public/smallpreview.mp4"></video>
 
 ## Table of contents
