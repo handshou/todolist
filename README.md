@@ -1,5 +1,15 @@
 # User Guide
 
+Live demo: https://todolist-hansel.web.app
+
+See also: [Admin Guide](https://github.com/handshou/todolist/blob/main/README%20ADMIN.md)
+
+<figure class="video_container">
+  <video controls="true" allowfullscreen="true" poster="public/userdemo.png">
+    <source src="public/userdemo.mp4" type="video/mp4">
+  </video>
+</figure>
+
 ## Table of contents
 
 1. [Overview](#overview)

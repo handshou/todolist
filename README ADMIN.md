@@ -1,9 +1,11 @@
 # Admin Guide
 
+See also: [User guide](https://github.com/handshou/todolist/blob/main/README.md)
+
 ## Table of contents
 
 1. [Overview](#overview)
-   - [Latest changes](#latest-changes)
+   - [Changes](#latest-changes)
    - [File structure](#file-structure)
    - [System architecture](#system-architecture)
    - [Getting started](#getting-started)
