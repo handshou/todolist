@@ -135,7 +135,7 @@ It is recommended to try out the live demo @ https://todolist-hansel.web.app
 
 ## Features (How-to)
 
-A full video (no audio) is available to preview the same features, [here](#quick-video-guide-no-audio).
+[Jump to full video (no audio)](#quick-video-guide-no-audio).
 
 Or dive right in!
 
