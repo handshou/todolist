@@ -33,7 +33,7 @@ https://github.com/handshou/todolist/assets/12982599/24213dc6-dce6-4f43-a787-efd
 
 ## Overview
 
-You can find this document online at .
+You can find this document [online](https://github.com/handshou/todolist/blob/main/README.md).
 
 ### Latest changes
 
