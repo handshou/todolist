@@ -1,14 +1,18 @@
 # User Guide
 
-Live demo: https://todolist-hansel.web.app
+See: [Admin Guide](https://github.com/handshou/todolist/blob/main/README%20ADMIN.md)
 
-See also: [Admin Guide](https://github.com/handshou/todolist/blob/main/README%20ADMIN.md)
+See: live demo @ https://todolist-hansel.web.app
+
+### Quick start video
 
 <figure class="video_container">
   <video controls="true" allowfullscreen="true" poster="public/userdemo.png">
     <source src="public/userdemo.mp4" type="video/mp4">
   </video>
 </figure>
+
+https://github.com/handshou/todolist/raw/main/public/userdemo.mp4
 
 ## Table of contents
 
