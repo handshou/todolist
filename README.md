@@ -1,12 +1,15 @@
 # User guide
 
+Demo: [https://todolist-hansel.web.app](https://todolist-hansel.web.app)
+
 See also: [admin guide](https://github.com/handshou/todolist/blob/main/README%20ADMIN.md)
 
-Live demo link: [https://todolist-hansel.web.app](https://todolist-hansel.web.app)
 
-### Quick video guide (No audio)
+### Quick video
 
-Or jump right in [here](#features-how-to)!
+[Jump right in](#features-how-to)!
+
+Duration, 1m 40s. No audio.
 
 https://github.com/handshou/todolist/assets/12982599/24213dc6-dce6-4f43-a787-efd1554690b4
 
@@ -137,7 +140,7 @@ It is recommended to try out the live demo @ https://todolist-hansel.web.app
 
 ## Features (How-to)
 
-[Jump to full video (no audio)](#quick-video-guide-no-audio).
+[Jump to full video (no audio)](#quick-video).
 
 Or dive right in!
 
