@@ -42,7 +42,7 @@ import { AiFillFileZip } from "react-icons/ai";
 import { AiFillFilePdf } from "react-icons/ai";
 import { GrFormView } from "react-icons/gr";
 import { AiTwotoneDelete } from "react-icons/ai";
-import { BiLinkExternal } from "react-icons/bi";
+import { LiaDownloadSolid } from "react-icons/lia";
 import { MdAdd } from "react-icons/md";
 
 import TodoModal from "../components/TodoModal";
@@ -233,20 +233,15 @@ export default function Todolist() {
     }, delay);
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const url = itemIdRef.current.url;
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = "blob";
-    xhr.onload = (event) => {
-      const blob = xhr.response;
-    };
-    xhr.open("GET", url);
-    xhr.send();
+    const response = await fetch(url);
+    const blob = await response.blob();
 
     const a = document.createElement("a");
-    a.href = url;
-    a.target = "_blank";
-    a.download = url.split("/").pop();
+    a.href = URL.createObjectURL(blob);
+    // a.target = "_blank";
+    a.download = itemIdRef.current.fileName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -510,13 +505,13 @@ export default function Todolist() {
                       )}
                     </>
                   }
-                  actionName={itemIdRef.current.url ? "Open" : "Upload"}
+                  actionName={itemIdRef.current.url ? "Download" : "Upload"}
                   colorScheme="blue"
                   // actionIcon={<AiTwotoneDelete />}
                   callback={
                     itemIdRef.current.url ? handleDownload : handleUpload
                   }
-                  actionIcon={itemIdRef.current.url && <BiLinkExternal />}
+                  actionIcon={itemIdRef.current.url && <LiaDownloadSolid />}
                   isOpen={isFileOpen}
                   onClose={onFileClose}
                 />
