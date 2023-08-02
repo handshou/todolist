@@ -2,34 +2,17 @@
 
 See: [Admin Guide](https://github.com/handshou/todolist/blob/main/README%20ADMIN.md)
 
-See: live demo @ https://todolist-hansel.web.app
+Live demo link: [Here @ https://todolist-hansel.web.app](https://todolist-hansel.web.app)
 
-### Quick start video
-
-<!-- <figure class="video_container">
-  <video controls="true" allowfullscreen="true" poster="public/userdemo.png">
-    <source src="public/userdemo.mp4" type="video/mp4">
-  </video>
-</figure> -->
-
-
-
+### Quick video guide (No audio)
 
 https://github.com/handshou/todolist/assets/12982599/24213dc6-dce6-4f43-a787-efd1554690b4
-
-
-
-https://github.com/handshou/todolist/assets/12982599/871908a7-395b-4266-8282-40def598f239
-
-
-<video src="public/smallpreview.mp4"></video>
 
 ## Table of contents
 
 1. [Overview](#overview)
     - [Changes](#latest-changes)
     - [Interface](#interface)
-    - [Introduction](#introduction)
     - [Main features](#main-features)
     - [Account management](#account-management)
 1. [Getting started](#getting-started)
@@ -49,37 +32,68 @@ https://github.com/handshou/todolist/assets/12982599/871908a7-395b-4266-8282-40d
 
 [Back to table of contents](#table-of-contents)
 
-`Link to github to make edits`
-
 You can find this document online.
 
 ### Latest changes
 
-5 minute demo video
+Technical Interview (26 Jul, 2023) : Create-react-app, React-router, Chakra UI
 
-Diagram
+Post Interview
+
+26 Jul : Style UI, Todolist, Login, Logout, Navbar, Footer
+
+27 Jul : Auth, Add Modal, "Add item", Validation Pop ups (Toasts), Protected routes
+
+28 Jul : Add Storage, Use Firebase Emulator (offline development database)
+
+29 Jul : Hosting live site, Add file upload and download, Use React Context API, .env.example, Dropzone
+
+31 Jul: Complete file upload and download
+
+1 Aug : Add Doc Renderer, Update CORS, Add Badges for filename and filesize
+
+2 Aug : Add Documentation
 
 ### Interface
 
-Show user interface (UI) diagram
-
-### Introduction
-
-### Main features
+![Login screen](/public/preview1.png)
+![Checklist](/public/preview2.png)
+![](/public/preview3.png)
+![](/public/preview4.png)
+![](/public/preview5.png)
+![](/public/preview6.png)
+![](/public/preview7.png)
+![](/public/preview8.png)
 
 ### Account management
 
+Account data is stored on a Firebase Auth account. 
+
+A login token is received after exchanging email and password on Firebase Auth servers. The token is stored in your browser session, Local Storage. 
+
+This token is cleared on logout.
+
 ## Getting started
+
+[Back to table of contents](#table-of-contents)
 
 ### Online
 
+It is recommended to try out the live demo @ https://todolist-hansel.web.app
+
 ### Offline, local
 
-Environment configuration (.env)
+Download zipped codes
 
-Required downloads
+Run npm install
+
+Setup Environment configuration (.env)
+
+Run npm run start
 
 ## How to
+
+[Back to table of contents](#table-of-contents)
 
 ### Register
 
@@ -90,6 +104,8 @@ Required downloads
 ### Attach, view, download file
 
 ## Troubleshooting
+
+[Back to table of contents](#table-of-contents)
 
 ### Register troubleshooting
 
@@ -104,3 +120,5 @@ Toast messages
 ## Support
 
 [Back to table of contents](#table-of-contents)
+
+Contact me on Github or open an issue [here](https://github.com/handshou/todolist/issues).

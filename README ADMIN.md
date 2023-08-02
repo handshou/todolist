@@ -1,6 +1,8 @@
 # Admin Guide
 
-See also: [User guide](https://github.com/handshou/todolist/blob/main/README.md)
+See: [User guide](https://github.com/handshou/todolist/blob/main/README.md)
+
+![Admin overview](/public/plan-admin-overview.png)
 
 ## Table of contents
 
