@@ -12,7 +12,7 @@ See: live demo @ https://todolist-hansel.web.app
   </video>
 </figure> -->
 
-<video src="https://github.com/handshou/todolist/raw/main/public/userdemo.mp4"></video>
+<video src="https://github.com/handshou/todolist/blob/main/public/userdemo.mp4"></video>
 
 ## Table of contents
 
