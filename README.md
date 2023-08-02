@@ -2,7 +2,7 @@
 
 See also: [admin guide](https://github.com/handshou/todolist/blob/main/README%20ADMIN.md)
 
-Live demo link: [Here @ https://todolist-hansel.web.app](https://todolist-hansel.web.app)
+Live demo link: [https://todolist-hansel.web.app](https://todolist-hansel.web.app)
 
 ### Quick video guide (No audio)
 
@@ -27,6 +27,8 @@ https://github.com/handshou/todolist/assets/12982599/24213dc6-dce6-4f43-a787-efd
 1. [Troubleshooting](#troubleshooting)
    - [Register troubleshooting](#register-troubleshooting)
    - [Login troubleshooting](#login-troubleshooting)
+   - [File not found](#file-not-found)
+   - [Page not found](#page-not-found)
 1. [Support](#support)
 
 ## Overview
@@ -43,11 +45,11 @@ Updates about the development process.
 | Create-react-app, React-router, Chakra UI  | 26 Jul |
 | **After technical interview**                       |
 | Style UI, todolist, login, logout          | 26 Jul |
-| Create navbar, footer                      |       |
+| Create navbar, footer                      | 26 Jul |
 | Add auth, modal, additional items, validation, protected routes | 27 Jul |
 | Add storage, firebase emulator (offline dev database)           | 28 Jul |
 |Host live demo, add file upload, add file download, Context API  | 29 Jul |
-| Add .env.example, Use react-dropzone                            |        |
+| Add .env.example, Use react-dropzone                            | 29 Jul |
 | Complete upload/download                                        | 31 Jul |
 |Add Doc Renderer, Update CORS, Add Badges for filename and filesize|1 Aug |
 |Documentation                                                    |  2 Aug |
@@ -139,8 +141,6 @@ A full video (no audio) is available to preview the same features, [here](#quick
 
 Or dive right in!
 
----
-
 ### Beginning 
 
 > Start here. Select one of the following. 
@@ -153,7 +153,7 @@ Or dive right in!
 >
 > `localhost:3000/login`
 
----
+___
 
 ### Login, logout
 
@@ -218,8 +218,6 @@ Or dive right in!
 Possible errors you may encounter and the steps to resolve these issues.
 
 Did not find an issue you are facing? [File an issue](https://github.com/handshou/todolist/issues).
-
----
 
 ### Register troubleshooting
 
