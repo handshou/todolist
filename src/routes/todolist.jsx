@@ -106,10 +106,6 @@ export default function Todolist() {
     }
   };
 
-  const handleModal = () => {
-    console.log("handle modal");
-  };
-
   const handleDeleteModal = async () => {
     itemIdRef.current.isLoading = true;
     const docRef = await doc(
