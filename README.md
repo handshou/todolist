@@ -56,13 +56,11 @@ Updates about the development process.
 
 > Further updates may be found in Git history.
 
-[Back to table of contents](#table-of-contents)
+[To top](#table-of-contents)
 
 ### Interface
 
 A showcase of the user interface on an iPhone SE 3, Safari browser.
-
----
 
 #### Login, logout
 <p float="left">
@@ -98,7 +96,7 @@ A showcase of the user interface on an iPhone SE 3, Safari browser.
 
 ---
 
-[Back to table of contents](#table-of-contents)
+[To top](#table-of-contents)
 
 ### Account management
 
@@ -111,7 +109,7 @@ They are **stored** in your browser session (localstorage).
 
 **Cleared** on logout.
 
-[Back to table of contents](#table-of-contents)
+[To top](#table-of-contents)
 
 ## Getting started
 
@@ -133,7 +131,7 @@ It is recommended to try out the live demo @ https://todolist-hansel.web.app
 1. See [Firebase guide](#https://support.google.com/firebase/answer/7015592?hl=en#zippy=%2Cin-this-article) for environment variables
 1. Start local environment, `npm run start`
 
-[Back to table of contents](#table-of-contents)
+[To top](#table-of-contents)
 
 ## Features (How-to)
 
@@ -153,7 +151,7 @@ Or dive right in!
 >
 > `localhost:3000/login`
 
-___
+---
 
 ### Login, logout
 
@@ -211,7 +209,7 @@ ___
 
 ---
 
-[Back to table of contents](#table-of-contents)
+[To top](#table-of-contents)
 
 ## Troubleshooting
 
@@ -229,6 +227,8 @@ There is an existing email registered on the application. To resolve issues on f
 
 Or [contact me](https://github.com/handshou) on Github.
 
+[To top](#table-of-contents)
+
 ---
 
 ### Login troubleshooting
@@ -244,8 +244,7 @@ Proceed to register a new account.
 1. Tap register button.
 1. You should be logged in automatically, re-use the credentials on your next login.
 
-[Back to table of contents](#table-of-contents)
-
+[To top](#table-of-contents)
 
 ---
 
@@ -260,7 +259,7 @@ No files have been selected.
 1. See a preview of the file, below the blue area.
 1. Tap upload button.
 
-[Back to table of contents](#table-of-contents)
+[To top](#table-of-contents)
 
 ---
 
@@ -268,10 +267,10 @@ No files have been selected.
 
 Not included in this release.
 
-[Back to table of contents](#table-of-contents)
+[To top](#table-of-contents)
 
 ## Support
 
 Contact me on Github or open an issue [here](https://github.com/handshou/todolist/issues).
 
-[Back to table of contents](#table-of-contents)
+[To top](#table-of-contents)
