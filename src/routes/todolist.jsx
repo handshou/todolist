@@ -37,7 +37,6 @@ import {
 } from "../context/MyProviders";
 import { AiOutlineFileAdd } from "react-icons/ai";
 import { AiFillFileImage } from "react-icons/ai";
-import { AiFillFileUnknown } from "react-icons/ai";
 import { AiFillFileZip } from "react-icons/ai";
 import { AiFillFilePdf } from "react-icons/ai";
 import { GrFormView } from "react-icons/gr";
@@ -48,9 +47,6 @@ import { MdAdd } from "react-icons/md";
 import TodoModal from "../components/TodoModal";
 import FileModal from "../components/FileModal";
 import EditInputField from "../components/EditInputField";
-
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-import { MyNoRenderer } from "../components/FileModal";
 
 const FileIcon = ({ type }) => {
   switch (type) {
